@@ -36,20 +36,53 @@
             <label for="check" class="hamburger">&#9776;</label>
             <nav>
               <ul class="mobile-set">
-                <li><a href="#">About</a></li>
-                <li><a href="#">Our Work</a></li>
-                <li><a href="#">Services</a></li>
-                <li><a href="#">Co-founders</a></li>
-                <li><a href="#">Testimonials</a></li>
-                <li><a href="#">Cas Studio</a></li>
-                <li><a href="#">FAQ's</a></li>
-                <li><a href="#">Contact</a></li>
+                <li><a href="#about">About</a></li>
+                <li><a href="#work">Our Work</a></li>
+                <li><a href="#sevices">Services</a></li>
+                <li><a href="#co">Co-founders</a></li>
+                <li><a href="#test">Testimonials</a></li>
+                <li><a href="#case">Case Studio</a></li>
+                <li><a href="#faqs">FAQ's</a></li>
+                <li><a href="#contactus">Contact</a></li>
               </ul>
             </nav>
           </div>
         </div>
       </div>
     </header>
+
+    <script>
+      document.addEventListener("DOMContentLoaded", () => {
+        try {
+          const sections = document.querySelectorAll("section");
+          if (!sections.length) return; // agar sections hi nahi to kuch na kare
+
+          // agar browser IntersectionObserver support kare
+          if ("IntersectionObserver" in window) {
+            const observer = new IntersectionObserver(
+              (entries) => {
+                entries.forEach((entry) => {
+                  if (entry.isIntersecting) {
+                    entry.target.classList.add("show");
+                  } else {
+                    entry.target.classList.remove("show"); // agar chaho to remove karo
+                  }
+                });
+              },
+              { threshold: 0.25 }
+            );
+
+            sections.forEach((sec) => observer.observe(sec));
+          } else {
+            // fallback: agar browser support na kare toh seedha show kar do
+            sections.forEach((sec) => sec.classList.add("show"));
+          }
+        } catch (err) {
+          // agar phir bhi koi unexpected error ho to console me dikhe ga
+          console.error("Scroll animation error:", err);
+        }
+      });
+    </script>
 
     <section class="bg-s1 padd-top200 pad-botom100">
       <div class="container">
@@ -180,7 +213,7 @@
       });
     </script>
 
-    <section class="pad-section top-border padd-body">
+    <section class="pad-section top-border padd-body" id="about">
       <div class="container">
         <div class="flex space-between flex-wrap flex-direct-reverse">
           <div class="col52">
@@ -255,33 +288,56 @@
     </section>
 
     <script>
-      const counters = document.querySelectorAll(".counter");
-      const speed = 200; // smaller = faster
+      document.addEventListener("DOMContentLoaded", () => {
+        const counters = document.querySelectorAll(".counter");
+        const speed = 200;
 
-      counters.forEach((counter) => {
-        const target = parseFloat(counter.getAttribute("data-target")); // decimal allow
-        const isDecimal = target % 1 !== 0; // check if number has decimal
-        let count = 0;
+        function runCounter(counter) {
+          const target = parseFloat(counter.getAttribute("data-target"));
+          const isDecimal = target % 1 !== 0;
+          let count = 0;
 
-        const updateCount = () => {
-          let inc = target / speed;
+          const updateCount = () => {
+            let inc = target / speed;
 
-          if (count < target) {
-            count += inc;
-            counter.innerText = isDecimal
-              ? count.toFixed(1)
-              : Math.floor(count);
-            setTimeout(updateCount, 5);
-          } else {
-            counter.innerText = target; // final value set
-          }
-        };
+            if (count < target) {
+              count += inc;
+              counter.innerText = isDecimal
+                ? count.toFixed(1)
+                : Math.floor(count);
+              setTimeout(updateCount, 10);
+            } else {
+              counter.innerText = target;
+            }
+          };
 
-        updateCount();
+          updateCount();
+        }
+
+        const observer = new IntersectionObserver(
+          (entries) => {
+            entries.forEach((entry) => {
+              if (entry.isIntersecting) {
+                const countersInside =
+                  entry.target.querySelectorAll(".counter");
+                countersInside.forEach((counter) => {
+                  counter.innerText = "0"; // reset before run
+                  runCounter(counter);
+                });
+              }
+            });
+          },
+          { threshold: 0.5 }
+        );
+
+        const aboutSection = document.querySelector("#about");
+        if (aboutSection) {
+          observer.observe(aboutSection);
+        }
       });
     </script>
 
-    <section class="bg-long-form pad-section padd-body">
+    <section class="bg-long-form pad-section padd-body" id="work">
       <div class="container">
         <div class="flex space-between align-center padding10">
           <h3 class="font20-600white color-white margin0 padtext-about-bottom">
@@ -656,7 +712,7 @@
       </div>
     </section>
 
-    <section class="pad-section padd-body">
+    <section class="pad-section padd-body" id="services">
       <div class="container">
         <div class="flex space-between flex-wrap align-bottom">
           <div class="col62">
@@ -685,7 +741,7 @@
           <div class="services-container col40">
             <!-- Right Content -->
             <div class="service-content">
-              <div class="service-box">
+              <div class="service-box service">
                 <h3>Video Editing</h3>
                 <p>
                   Engaging edits that boost audience retention, enhance
@@ -693,7 +749,7 @@
                 </p>
               </div>
 
-              <div class="service-box">
+              <div class="service-box service">
                 <h3>Thumbnail Designing</h3>
                 <p>
                   Eye-catching, high-conversion thumbnails designed to increase
@@ -701,7 +757,7 @@
                 </p>
               </div>
 
-              <div class="service-box">
+              <div class="service-box service">
                 <h3>YouTube Channel Management</h3>
                 <p>
                   Full channel support including uploads, optimization, and
@@ -715,7 +771,36 @@
       </div>
     </section>
 
-    <section class="pad-section padd-body bg-s1 flex-wrap-mobile">
+    <script>
+      const services = document.querySelectorAll(".service");
+
+      const observer = new IntersectionObserver(
+        (entries) => {
+          entries.forEach((entry, index) => {
+            if (entry.isIntersecting) {
+              // Animate with delay one by one
+              setTimeout(() => {
+                entry.target.style.transition = "all 1s ease-out";
+                entry.target.style.opacity = "1";
+                entry.target.style.transform = "translateY(0)";
+              }, index * 400);
+            } else {
+              // Reset when out of view
+              entry.target.style.transition = "none";
+              entry.target.style.opacity = "0";
+              entry.target.style.transform = "translateY(80px)";
+            }
+          });
+        },
+        { threshold: 0.3 }
+      );
+
+      services.forEach((service) => {
+        observer.observe(service);
+      });
+    </script>
+
+    <section class="pad-section padd-body bg-s1 flex-wrap-mobile" id="co">
       <div class="container">
         <div
           class="flex space-between flex-wrap-mobile justify-center-mobile mobile-text-center"
@@ -783,7 +868,7 @@
       </div>
     </section>
 
-    <section class="pad-section padd-body">
+    <section class="pad-section padd-body" id="test">
       <div class="container">
         <div class="flex space-between text-align justify-center">
           <div class="col52">
@@ -841,7 +926,7 @@
       </div>
     </section>
 
-    <section class="pad-section padd-body bg-long-form">
+    <section class="pad-section padd-body bg-long-form" id="case">
       <div class="container">
         <div
           class="flex space-between text-align justify-center martext-about-bottom"
@@ -896,7 +981,7 @@
       </div>
     </section>
 
-    <section class="pad-section padd-body">
+    <section class="pad-section padd-body" id="faqs">
       <div class="container">
         <div class="flex text-align justify-center martext-about-bottom">
           <div
@@ -1021,7 +1106,7 @@
       });
     </script>
 
-    <section class="pad-section padd-body">
+    <section class="pad-section padd-body" id="contactus">
       <div class="container">
         <div class="flex text-align justify-center martext-about-bottom">
           <div
