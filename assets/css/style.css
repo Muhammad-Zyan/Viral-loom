@@ -15,6 +15,20 @@ body {
   font-family: manrope;
 }
 
+html {
+  scroll-behavior: smooth;
+}
+
+section {
+  opacity: 0;
+  transform: translateY(60px);
+  transition: all 0.9s ease;
+}
+section.show {
+  opacity: 1;
+  transform: translateY(0);
+}
+
 .margin0 {
   margin: 0;
 }
@@ -162,8 +176,8 @@ header img {
 .padding10 {
   padding-left: 35px;
   padding-right: 35px;
-  padding-bottom: 10px;
-  padding-top: 10px;
+  padding-bottom: 5px;
+  padding-top: 5px;
 }
 
 .back-drop {
@@ -247,12 +261,6 @@ header img {
 .btn a:hover {
   transform: scale(1.1); /* zoom effect */
 }
-
-
-
-
-
-
 
 /* section2 */
 
@@ -433,7 +441,7 @@ header img {
 }
 
 .col55 {
-  background-image: url(/assets/images/service/download-2.webp);
+  background-image: url(../images/service/download-2.webp);
   width: 58%;
   background-size: cover;
   background-position: center center;
